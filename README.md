@@ -5,11 +5,15 @@
 It's a simple but generally useful calendar app.
 
 With it, you can:
+
 1. Have a overlook for the calendar
 2. Check your daily routine or agenda item in monthly, weekly and also daily view
 3. To-Do-List edition supported, too
 
 Tech I use:
+
+> Here I strongly recommend you to use **Expo** for RN development.
+
 - React Native + Expo
 - Typescript
 
@@ -37,4 +41,4 @@ npx expo start
 
 > Warning: you may need to install expo-cli if you never use it before.
 
-For more infomation on **EXPO**, go to official: https://expo.dev
+For more infomation on **EXPO**, go to official: [Expo Official Website](https://expo.dev)

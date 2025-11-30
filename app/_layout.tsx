@@ -1,8 +1,7 @@
 /* This is the root layout of the app based on Tabs router. */
-import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
-import { act } from "react";
 
 const tabBarTheme = {
 	/* Theme style for the tab bar */
@@ -29,19 +28,45 @@ export default function RootLayout() {
 				tabBarInactiveTintColor:inactiveTintColor,
 			}}
 		>
+			{/* Home Screen: display the calendar table */}
 			<Tabs.Screen 
 				name="index"
 				options={{
 					title: "主页",
-					tabBarIcon: ({color}) => <Ionicons name="home" size={24} color={color}/>
+					tabBarIcon: ({color, focused}) => 
+						<Ionicons name={focused ? "home" : "home-outline"} size={focused ? 26 : 24} color={color}/>
 				}}
 			/>
 
+			{/* Views Screen: display the views of the calendar table; with monthly, weekly, daily views */}
+			<Tabs.Screen 
+				name="views"
+				options={{
+					title: "视图",
+					headerShown: false,
+					tabBarIcon: ({color, focused}) => 
+						<Ionicons name={focused ? "calendar" : "calendar-outline"} size={focused ? 26 : 24} color={color}/>
+				}}
+			/>
+
+			{/* Events Screen: creation, edition, details and deletion of events */}
+			<Tabs.Screen 
+				name="events"
+				options={{
+					title: "待办",
+					headerShown: false,
+					tabBarIcon: ({color, focused}) => 
+						<Ionicons name={focused ? "book" : "book-outline"} size={focused ? 26 : 24} color={color}/>
+				}}
+			/>
+
+			{/* Settings Screen: support ics files import and export */}
 			<Tabs.Screen 
 				name="settings"
 				options={{
-					title: "设置",
-					tabBarIcon: ({color}) => <Ionicons name="settings" size={24} color={color}/>
+					title: "文件",
+					tabBarIcon: ({color, focused}) => 
+						<Ionicons name={focused ? "settings" : "settings-outline"} size={focused ? 26 : 24} color={color}/>
 				}}
 			/>
 
