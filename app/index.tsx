@@ -1,84 +1,97 @@
 /**
- * @file home.tsx
- * @description show the homepage screen
- * @component Calendar, DailySentence
+ * @file index.tsx
+ * @description 日历APP的主页面
  */
-// coomponents
-import CalendarHeader from "@/components/calendar/CalendarHeadr";
-import CalendarMenu from "@/components/calendar/CalendarMenu";
-import CalendarTable from "@/components/calendar/CalendarTable";
-import CreateEvent from "@/components/event/CreateEvent";
-import Astrology from "@/components/homepage/Astrology";
-import DailyWord from "@/components/homepage/DailyWord";
 
-// hooks
-import { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MonthView } from "@/components/MonthView";
+import { CreateEvent } from "@/components/others/CreateEvent";
+import { TopBar } from "@/components/TopBar";
+import { ViewSwitcher } from "@/components/ViewSwitcher";
+import React, { useState } from "react";
+import {
+    Dimensions,
+    Modal,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
+
+const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} = Dimensions.get('window');
 
 export default function Homepage() {
-    const [currentDate, setCurrentDate] = useState(new Date()); // state: current date
-    const [showModal, setShowModal] = useState(false); // state: show modal or not
+    // ----- 状态定义 ----- //
+    const [currentDate, setCurrentDate] = useState(new Date()); // 维护当前日期对象
+    const [viewChoice, setViewChoice] = useState('month'); // 默认显示月视图
+    const [showViewBar, setShowViewBar] = useState(false); // 默认不显示视图切换按钮
+    const [showCreateModal, setShowCreateModal] = useState(false); // 默认不显示创建待办 Modal
+
+    // ----- 生命周期函数 ----- //
+
+    // ----- 引用 ----- //
+
+    // ----- 事件处理函数 ----- //
+    const handleShowCreateModal = () => {
+        setShowCreateModal(prev => !prev);
+    }
+
 
     return (
         <View style={styles.body}>
-            {/* Calendar */}
-            <CalendarMenu 
-                currentMonth={currentDate}
-                onMonthChange={setCurrentDate}
+            {/* 顶部栏 */}
+            <TopBar
+                viewShow={showViewBar}
+                onViewShow={setShowViewBar}
             />
-            <CalendarHeader />
-            <CalendarTable
-                currentMonth={currentDate}
-				type="home"
-			/>
+            {/* 视图切换器(选择性显示) */}
+            { 
+                showViewBar &&  
+                <ViewSwitcher choice={viewChoice} onChoiceChange={setViewChoice} />
+            }
 
-			{/* Homepage expasion */}
-			<DailyWord />
-			<Astrology />
+            {/* 视图内容 */}
+            { viewChoice === 'month' && <MonthView /> }
 
-            {/* handy way to add a new agenda event */}
+            {/* 右下角添加待办事项按钮 */}
+            <TouchableOpacity
+                onPress={handleShowCreateModal}
+                style={{
+                    position: 'absolute',
+                    bottom: 50,
+                    right: 15,
+                    width: 50,
+                    height: 50,
+                    borderRadius: 25,
+                    backgroundColor: 'lightgreen',
+                    justifyContent: 'center',
+                }}
+            >
+                <Text style={{fontSize: 24, fontWeight: 'bold', textAlign: 'center', color: '#FFFFFF', }}>
+                    +
+                </Text>
+            </TouchableOpacity>
+            {/* 创建待办 Modal 组件 */}
             <Modal
                 animationType='slide'
                 transparent={false}
-                visible={showModal}
-                onRequestClose={()=>{
-                    setShowModal(!showModal);
-                }}
-                >
-                    <CreateEvent onVisibleChange={setShowModal}/>
+                visible={showCreateModal}
+                onRequestClose={() => setShowCreateModal(false)}
+            >
+                <CreateEvent onVisibleChange={setShowCreateModal} />
             </Modal>
-            <TouchableOpacity style={styles.handyBtn} onPress={()=>setShowModal(true)}>
-                <Text style={styles.handyBtnText}>
-                    Add
-                </Text>
-            </TouchableOpacity>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
-    body : {
-        flex: 1,
+    body: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: 'white',
-        width: '100%',
+        width: WINDOW_WIDTH,
+        height: WINDOW_HEIGHT,
+        paddingTop: StatusBar.currentHeight,
+        backgroundColor: '#FEFEFE',
     },
-    handyBtn : {
-        position: 'absolute',
-        bottom: 20,
-        right: 20,
-        backgroundColor: 'lightblue',
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-    },
-    handyBtnText : {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center',
-        lineHeight: 50,
-    }
-});
+})
