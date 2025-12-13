@@ -106,6 +106,38 @@ export interface WeekViewProps {
     onWeekChange: (date: Date) => void
 }
 
+/**
+ * @interface DayViewMenuProps
+ * @description 日视图菜单的 props 类型定义
+ * @property {Date} thisDay - 当前日的时间对象
+ * @callback onDayChange - 日选择变化的回调函数
+ */
+export interface DayViewMenuProps {
+    thisDay: Date
+    onDayChange: (date: Date) => void
+}
+
+/**
+ * @interface DayEntryProps
+ * @description 日视图事件条目的 props 类型定义
+ * @property {number} time - 时间节点
+ * @property {string} title - 事件标题
+ */
+export interface DayEntryProps {
+    time: number
+    title: string
+}
+
+/**
+ * @interface DayViewProps
+ * @description 日视图的 props 类型定义
+ * @property {Date} thisDay - 当前日的时间对象
+ * @callback onDayChange - 日选择变化的回调函数
+ */
+export interface DayViewProps {
+    thisDay: Date
+    onDayChange: (date: Date) => void
+}
 
 // ---------- 其他组件 Props 类型定义 ---------- //
 

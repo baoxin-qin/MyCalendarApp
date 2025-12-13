@@ -3,11 +3,8 @@
  * @description 日历APP的主页面
  */
 
-import { MonthView } from "@/components/MonthView";
+import { DayView, MonthView, TopBar, ViewSwitcher, WeekView } from "@/components";
 import { CreateEvent } from "@/components/others/CreateEvent";
-import { TopBar } from "@/components/TopBar";
-import { ViewSwitcher } from "@/components/ViewSwitcher";
-import { WeekView } from "@/components/WeekView";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useState } from "react";
 import {
@@ -73,6 +70,7 @@ export default function Homepage() {
             {/* 视图内容 */}
             { viewChoice === 'month' && <MonthView thisMonth={currentMonthDate} onMonthChange={setCurrentMonthDate} /> }
             { viewChoice === 'week' &&  <WeekView thisWeek={currentWeekDate} onWeekChange={setCurrentWeekDate} /> }
+            { viewChoice === 'day' && <DayView thisDay={currentDayDate} onDayChange={setCurrentDayDate} /> }
 
             {/* 右下角添加待办事项按钮 */}
             <TouchableOpacity
