@@ -3,7 +3,7 @@
  * @description 主页面的顶部导航栏
  */
 import { TopBarProps } from "@/types/Properties";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -25,7 +25,7 @@ export const TopBar = ({viewShow, onViewShow}: TopBarProps) => {
                 onPress={handleShowViewBar}
                 style={styles.switcherBtn}
             >
-                <Ionicons name='arrow-down' size={20} color={'#000'} style={{alignSelf: 'center',}} />
+                <AntDesign name='swap' size={25} color={'#000'} style={{alignSelf: 'center'}} />
             </TouchableOpacity>
 
             {/* 标题 */}
@@ -37,7 +37,7 @@ export const TopBar = ({viewShow, onViewShow}: TopBarProps) => {
             <TouchableOpacity 
                 style={styles.switcherBtn}
             >
-                <Ionicons name='settings' size={20} color={'#000'} style={{alignSelf: 'center',}} />
+                <AntDesign name='unordered-list' size={25} color={'#000'} style={{alignSelf: 'center'}} />
             </TouchableOpacity>
         </View>
     )
@@ -58,15 +58,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     switcherBtn: {
-        width: 35,
-        height: 35,
-        borderRadius: 18,
-        borderWidth: 1,
+        width: 40,
+        height: 40,
         justifyContent: 'center',
     },
-    expandBtn: {
-        width: 35,
-        height: 35,
-        justifyContent: 'center',
-    }
 })

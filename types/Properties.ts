@@ -60,6 +60,53 @@ export interface MonthViewTableProps {
     thisMonth: Date
 }
 
+/**
+ * @interface MonthViewProps
+ * @description 月视图的 props 类型定义
+ * @property {Date} thisMonth - 当前月份
+ * @callback onMonthChange - 月份选择变化的回调函数
+ */
+export interface MonthViewProps {
+    thisMonth: Date
+    onMonthChange: (date: Date) => void
+}
+
+/**
+ * @interface WeekViewMenuProps
+ * @description 周视图菜单的 props 类型定义
+ * @property {Date} thisWeek - 当前周的时间对象
+ * @callback onWeekChange - 周选择变化的回调函数
+ */
+export interface WeekViewMenuProps {
+    thisWeek: Date
+    onWeekChange: (date: Date) => void
+}
+
+/**
+ * @interface WeekViewEntryProps
+ * @description 周视图事件条目的 props 类型定义
+ * @property {string} name - 星期的名称
+ * @property {number} date - 日期
+ * @property {string} title - 事件标题
+ */
+export interface WeekViewEntryProps {
+    name: string
+    date: number
+    title: string
+}
+
+/**
+ * @interface WeekViewProps
+ * @description 周视图的 props 类型定义
+ * @property {Date} thisWeek - 当前周的时间对象
+ * @callback onWeekChange - 周选择变化的回调函数
+ */
+export interface WeekViewProps {
+    thisWeek: Date
+    onWeekChange: (date: Date) => void
+}
+
+
 // ---------- 其他组件 Props 类型定义 ---------- //
 
 /**

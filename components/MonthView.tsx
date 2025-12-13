@@ -2,24 +2,26 @@
  * @file MonthView.tsx
  * @description 月视图组件
  */
-import { MonthViewCellProps, MonthViewMenuProps, MonthViewTableProps } from "@/types/Properties";
-import React, { useState } from "react";
+import {
+    MonthViewCellProps,
+    MonthViewMenuProps,
+    MonthViewProps,
+    MonthViewTableProps,
+} from "@/types/Properties";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 /**
  * 月历菜单栏目
  */
 const Menu = ({thisMonth, onMonthChange}: MonthViewMenuProps) => {
-    const [month, setMonth] = useState(thisMonth)
 
     const handlePrevMonth = () => {
-        const prevMonth = new Date(month.getFullYear(), month.getMonth() - 1, 1)
-        setMonth(prevMonth)
+        const prevMonth = new Date(thisMonth.getFullYear(), thisMonth.getMonth() - 1, 1)
         onMonthChange(prevMonth)
     }
     const handleNextMonth = () => {
-        const nextMonth = new Date(month.getFullYear(), month.getMonth() + 1, 1)
-        setMonth(nextMonth)
+        const nextMonth = new Date(thisMonth.getFullYear(), thisMonth.getMonth() + 1, 1)
         onMonthChange(nextMonth)
     }
 
@@ -29,7 +31,7 @@ const Menu = ({thisMonth, onMonthChange}: MonthViewMenuProps) => {
                 <Text style={{color: 'lightgreen', fontSize: 24}}>{"<<"}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 24,}}>
-                {month.getFullYear()}年{month.getMonth() + 1}月
+                {thisMonth.getFullYear()}年{thisMonth.getMonth() + 1}月
             </Text>
             <TouchableOpacity onPress={handleNextMonth}>
                 <Text style={{color: 'lightgreen', fontSize: 24}}>{">>"}</Text>
@@ -129,13 +131,12 @@ const Table = ({thisMonth}: MonthViewTableProps) => {
 /**
  * 月视图组件
  */
-export const MonthView = () => {
-    const [currentDate, setCurrentDate] = useState(new Date())
+export const MonthView = ({thisMonth, onMonthChange}: MonthViewProps) => {
     return (
         <View style={styles.container}>
-            <Menu thisMonth={currentDate} onMonthChange={setCurrentDate} />
+            <Menu thisMonth={thisMonth} onMonthChange={onMonthChange} />
             <Header />
-            <Table thisMonth={currentDate} />
+            <Table thisMonth={thisMonth} />
         </View>
     )
 }
