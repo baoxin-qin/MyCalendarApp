@@ -3,8 +3,19 @@
  * @description Modal 组件承载的创建事件页面
  */
 import { CreateEventProps } from '@/types/Properties';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Entypo from '@expo/vector-icons/Entypo';
 import React, { useState } from 'react';
-import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+    Alert,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import { TimePickerHMS, TimePickerYMD } from './TimePicker';
 
 export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
@@ -57,17 +68,17 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
     return (
         <View style={styles.container} >
             {/* 顶部按钮区 */}
-            <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center', width: '100%'}}>
                 <TouchableOpacity
                     onPress={handleCancel}
                 >
-                    <Text style={{color: 'red'}}>取消</Text>
+                    <Text style={{color: 'red', fontSize: 16}}>取消</Text>
                 </TouchableOpacity>
                 <Text style={{fontSize: 20, fontWeight: 'bold'}}>新建待办</Text>
                 <TouchableOpacity
                     onPress={handleSave}
                 >
-                    <Text style={{color: 'green'}}>保存</Text>
+                    <Text style={{color: 'green', fontSize: 16}}>保存</Text>
                 </TouchableOpacity>
             </View>
 
@@ -79,6 +90,7 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
             >
                 {/* 标题输入框 */}
                 <View style={styles.textInput}>
+                    <AntDesign name='profile' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>标题:</Text>
                     <TextInput
                         value={title}
@@ -89,7 +101,7 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                 </View>
 
                 {/* 时间选择框 */}
-                <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center'}}>
+                <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center', marginVertical: 5}}>
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10}}>
                         开始时间: (选择后请分别点击确认按钮)
                     </Text>
@@ -98,7 +110,7 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                         <TimePickerHMS onTimeSelect={setStartTimeHMS} />
                     </View>
                 </View>
-                <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center'}}>
+                <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center', marginVertical: 5}}>
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10} }>
                         结束时间: (选择后请分别点击确认按钮)
                     </Text>
@@ -110,6 +122,7 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
 
                 {/* 地点输入框 */}
                 <View style={styles.textInput}>
+                    <Entypo name='location' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>地点:</Text>
                     <TextInput
                         value={location}
@@ -121,6 +134,7 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
 
                 {/* 备注输入框 */}
                 <View style={styles.textInput}>
+                    <AntDesign name='comment' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>备注:</Text>
                     <TextInput
                         value={comment}
@@ -129,6 +143,10 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                         style={styles.inputFrame}
                     />
                 </View>
+
+                <Text style={{height: 40,fontSize: 14, color: 'darkgray', textAlign: 'center', marginVertical: 5}}>
+                    {'我可是有底线的 ^ω^'}
+                </Text>
             </ScrollView>
         </View>
     )
@@ -147,7 +165,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flexDirection: 'row',
-        width: '80%',
+        width: '90%',
         height: 50,
         borderRadius: 5,
         backgroundColor: '#F2F2F2',

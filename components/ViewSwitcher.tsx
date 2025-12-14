@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     activeButton: {
-        borderRadius: '20%',
+        borderRadius: 10,
         backgroundColor: '#FFFFFF',
     },
     text: {

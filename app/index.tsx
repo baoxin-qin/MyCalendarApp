@@ -6,8 +6,9 @@
 import { DayView, MonthView, TopBar, ViewSwitcher, WeekView } from "@/components";
 import { CreateEvent } from "@/components/others/CreateEvent";
 import Feather from "@expo/vector-icons/Feather";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
+    Animated,
     Dimensions,
     Modal,
     StatusBar,
@@ -20,7 +21,7 @@ import {
 const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} = Dimensions.get('window');
 
 export default function Homepage() {
-    // ----- 状态定义 ----- //
+    // ----- State 定义 ----- //
     const [viewChoice, setViewChoice] = useState('month'); // 默认显示月视图
     const [showViewBar, setShowViewBar] = useState(false); // 默认不显示视图切换按钮
     const [showCreateModal, setShowCreateModal] = useState(false); // 默认不显示创建待办 Modal
@@ -28,11 +29,31 @@ export default function Homepage() {
     const [currentWeekDate, setCurrentWeekDate] = useState(new Date()); // 为周视图维护的日期对象
     const [currentDayDate, setCurrentDayDate] = useState(new Date()); // 为日视图维护的日期对象
 
-    // ----- 生命周期函数 ----- //
+    // ----- useEffect 定义 ----- //
 
-    // ----- 引用 ----- //
+    // ----- useRef 定义 ----- //
+    // 视图切换器 ViewSwitcher 的切换动画效果
+    const viewBarOpacity = useRef(new Animated.Value(0)).current
+    const viewBarHeight = useRef(new Animated.Value(0)).current
+    // 视图的切换动画效果
 
     // ----- 事件处理函数 ----- //
+    const handleViewBarShow = (visible: boolean) => {
+        setShowViewBar(visible)
+        // 执行动画
+        Animated.parallel([
+            Animated.timing(viewBarOpacity, {
+                toValue: visible ? 1 : 0, // 显示或隐藏
+                duration: 300, // 动画时间 300 ms
+                useNativeDriver: false, // 使用原生动画驱动
+            }),
+            Animated.timing(viewBarHeight, {
+                toValue: visible ? 35 : 0, // 35 是 ViewSwitcher 的高度(详见 ViewSwitcher.tsx)
+                duration: 300,
+                useNativeDriver: false, // 高度变化不能使用原生动画驱动
+            }),
+        ]).start()
+    }
     const handleShowCreateModal = () => {
         setShowCreateModal(prev => !prev);
     }
@@ -59,13 +80,18 @@ export default function Homepage() {
             {/* 顶部栏 */}
             <TopBar
                 viewShow={showViewBar}
-                onViewShow={setShowViewBar}
+                onViewShow={handleViewBarShow}
             />
             {/* 视图切换器(选择性显示) */}
-            { 
-                showViewBar &&  
+            <Animated.View
+                style={{
+                    opacity: viewBarOpacity,
+                    height: viewBarHeight,
+                    overflow: 'hidden', // 防止溢出
+                }}
+            >
                 <ViewSwitcher choice={viewChoice} onChoiceChange={setViewChoice} />
-            }
+            </Animated.View>
 
             {/* 视图内容 */}
             { viewChoice === 'month' && <MonthView thisMonth={currentMonthDate} onMonthChange={setCurrentMonthDate} /> }
