@@ -6,10 +6,12 @@ import { TopBarProps } from "@/types/Properties";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MenuList } from "./others/MenuList";
 
 
 export const TopBar = ({viewShow, onViewShow}: TopBarProps) => {
-    const [thisViewShow, setThisViewShow] = useState(viewShow)
+    const [thisViewShow, setThisViewShow] = useState(viewShow) // 外部组件视图切换器的显示状态
+    const [showMenu, setShowMenu] = useState(false) // 右侧菜单按钮的显示状态
 
     // 视图栏的显示处理
     const handleShowViewBar = () => {
@@ -17,6 +19,8 @@ export const TopBar = ({viewShow, onViewShow}: TopBarProps) => {
         setThisViewShow(!temp)
         onViewShow(!temp)
     }
+    // 右侧菜单按钮的显示处理
+    const handleShowMenu = () => setShowMenu(!showMenu)
 
     return (
         <View style={styles.container}>
@@ -30,15 +34,21 @@ export const TopBar = ({viewShow, onViewShow}: TopBarProps) => {
 
             {/* 标题 */}
             <Text style={styles.title}>
-                记录每一刻
+                {"「迹·录」每一刻"}
             </Text>
 
             {/* 拓展按钮 */}
-            <TouchableOpacity 
+            <TouchableOpacity
+                onPress={handleShowMenu}
                 style={styles.switcherBtn}
             >
                 <AntDesign name='unordered-list' size={25} color={'#000'} style={{alignSelf: 'center'}} />
             </TouchableOpacity>
+            {/* 右侧菜单 */}
+            <MenuList
+                visible={showMenu}
+                onVisibleChange={setShowMenu}
+            />
         </View>
     )
 }

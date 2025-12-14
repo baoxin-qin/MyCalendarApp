@@ -160,9 +160,12 @@ export interface CreateEventProps {
 }
 
 /**
- * @interface ScrollMonthProps
- * @description 滚动月份的 props 类型定义
+ * @interface MenuListProps
+ * @description 菜单按钮列表的 props 类型定义
+ * @property {boolen} visible - 菜单是否显示
+ * @callback onVisibleChange - 菜单显示状态变化的回调函数
  */
-export interface ScrollMonthProps {
-    onScroll: (direction: 'prev' | 'next') => void
+export interface MenuListProps {
+    visible: boolean
+    onVisibleChange: (visible: boolean) => void
 }

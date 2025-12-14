@@ -96,6 +96,11 @@ export const WeekView = ({thisWeek, onWeekChange}: WeekViewProps) => {
     return (
         <View style={styles.container}>
             <Menu thisWeek={thisWeek} onWeekChange={onWeekChange} />
+            <View style={[styles.entry, {borderBottomWidth: 1, borderColor: '#EFEFEF'}]}>
+                <Text style={{flex: 1, textAlign: 'center'}}>星期</Text>
+                <Text style={{flex: 1, textAlign: 'center'}}>日期</Text>
+                <Text style={{flex: 5, textAlign: 'center'}}>日程</Text>
+            </View>
             {weekDays.map((day, index) => (
                 <Entry
                     key={index}
