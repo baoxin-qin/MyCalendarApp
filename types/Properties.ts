@@ -160,6 +160,15 @@ export interface CreateEventProps {
 }
 
 /**
+ * @interface QueryEventSearcgBarProps
+ * @description 查询事件搜索栏的 props 类型定义
+ * @callback onKeywordChange - 搜索关键词变化的回调函数
+ */
+export interface QueryEventSearcgBarProps {
+    onKeywordChange: (keyword: string) => void
+}
+
+/**
  * @interface MenuListProps
  * @description 菜单按钮列表的 props 类型定义
  * @property {boolen} visible - 菜单是否显示
@@ -168,4 +177,32 @@ export interface CreateEventProps {
 export interface MenuListProps {
     visible: boolean
     onVisibleChange: (visible: boolean) => void
+}
+
+// ---------- 日程事件数据结构 ---------- //
+/**
+ * @interface Event
+ * @description 日程事件数据结构
+ * @property {string} title - 日程标题
+ * @property {string | null} startTime - 日程开始时间
+ * @property {string | null} endTime - 日程结束时间
+ * @property {string | null} location - 日程地点
+ * @property {string | null} comment - 日程备注
+ * @example
+ * {
+ *   title: '开会',
+ *   startTime: '2022-01-01 10:00:00',
+ *   endTime: '2022-01-01 11:00:00',
+ *   location: '会议室A',
+ *   comment: '讨论项目进展',
+ * }
+ * 时间采用 ISO 格式字符串 YYYY-MM-DD hh:mm:ss
+ * 其他可以没有，但是至少有一个标题
+ */
+export interface Event {
+    title: string
+    startTime: string | null
+    endTime: string | null
+    location: string | null
+    comment: string | null
 }

@@ -27,10 +27,10 @@ export default function RootLayout() {
 				<Text style={styles.slogan}>{'生活的每一刻，都值得记录'}</Text>
 				<View style={styles.copyright}>
 					<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-						<AntDesign name='copyright' size={15} color={'#DDD'} />
-						<Text style={{marginLeft: 5, fontSize: 12, color: '#DDD'}}>{'Copyright for Meet-Day App'}</Text>
+						<AntDesign name='copyright' size={15} color={'#CCC'} />
+						<Text style={{marginLeft: 5, fontSize: 12, color: '#CCC'}}>{'Copyright for Meet-Day App'}</Text>
 					</View>
-					<Text style={{marginTop: 5, fontSize: 12, color: '#DDD'}}>{'author: baoxin_qin@qq.com'}</Text>
+					<Text style={{marginTop: 5, fontSize: 12, color: '#CCC'}}>{'author: baoxin_qin@qq.com'}</Text>
 				</View>
 			</View>
 		)
@@ -40,6 +40,8 @@ export default function RootLayout() {
 		<Stack screenOptions={{headerShown: false}} >
 			{/* 主页面 */}
 			<Stack.Screen name="index" options={{headerShown: false}} />
+			<Stack.Screen name="query" options={{headerShown: false, headerBackVisible: false}} />
+			<Stack.Screen name="introduction" options={{headerShown: false, headerBackVisible: false}} />
 		</Stack>	
 	);
 }

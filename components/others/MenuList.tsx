@@ -3,6 +3,7 @@
  * @description TopBar 右侧的菜单下拉列表组件
  */
 import { MenuListProps } from '@/types/Properties';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
     Modal,
@@ -14,9 +15,16 @@ import {
 } from 'react-native';
 
 export const MenuList = ({visible, onVisibleChange}: MenuListProps) => {
+    const router = useRouter();
     // 点击弹窗外部关闭弹窗
-    const handlePressOutside = () => {
-        onVisibleChange(false)
+    const handlePressOutside = () => onVisibleChange(false)
+    const goToQueryEvent = () => {
+        onVisibleChange(false);
+        router.push('/query');
+    }
+    const goToAboutApp = () => {
+        onVisibleChange(false);
+        router.push('/introduction');
     }
 
     return (
@@ -33,16 +41,16 @@ export const MenuList = ({visible, onVisibleChange}: MenuListProps) => {
             >
                 {/* 菜单内容列表 */}
                 <View style={styles.menuContainer}>
-                    <TouchableOpacity style={styles.menuOption}>
+                    <TouchableOpacity
+                        onPress={goToQueryEvent}
+                        style={styles.menuOption}
+                    >
                         <Text style={styles.menuOptionText}>查询日程</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.menuOption}>
-                        <Text style={styles.menuOptionText}>修改日程</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.menuOption}>
-                        <Text style={styles.menuOptionText}>删除日程</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.menuOption, { borderBottomWidth: 0 }]}>
+                    <TouchableOpacity 
+                        onPress={goToAboutApp}
+                        style={[styles.menuOption, { borderBottomWidth: 0 }]}
+                    >
                         <Text style={styles.menuOptionText}>关于 App</Text>
                     </TouchableOpacity>
                 </View>
