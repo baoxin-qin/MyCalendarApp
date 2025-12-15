@@ -5,8 +5,9 @@
 
 import { DayView, MonthView, TopBar, ViewSwitcher, WeekView } from "@/components";
 import { CreateEvent } from "@/components/others/CreateEvent";
+import { initDB, initTable } from "@/utils";
 import Feather from "@expo/vector-icons/Feather";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,
     Dimensions,
@@ -30,6 +31,14 @@ export default function Homepage() {
     const [currentDayDate, setCurrentDayDate] = useState(new Date()); // 为日视图维护的日期对象
 
     // ----- useEffect 定义 ----- //
+    // 初始化数据库表
+    useEffect(() => {
+        const initialize = async () => {
+            await initDB()
+            await initTable()
+        }
+        initialize()
+    }, [])
 
     // ----- useRef 定义 ----- //
     // 视图切换器 ViewSwitcher 的切换动画效果

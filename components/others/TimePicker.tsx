@@ -106,12 +106,11 @@ export const TimePickerYMD = ({onTimeSelect}: TimePickerProps) => {
     )
 }
 
-// 时分秒的时间选择器
-export const TimePickerHMS = ({onTimeSelect}: TimePickerProps) => {
+// 时分的时间选择器
+export const TimePickerHM = ({onTimeSelect}: TimePickerProps) => {
     const now = new Date(); // 选择器默认选择当前时间
     const [hour, setHour] = useState(now.getHours());
     const [minute, setMinute] = useState(now.getMinutes());
-    const [second, setSecond] = useState(now.getSeconds());
 
     // 时钟选择，0-23时
     const hourList = useMemo(() => {
@@ -133,21 +132,11 @@ export const TimePickerHMS = ({onTimeSelect}: TimePickerProps) => {
         }
         return list
     }, [])
-    // 秒钟选择，0-59秒
-    const secondList = useMemo(() => {
-        const list = []
-        for (let i = 0; i <= 59; i++) {
-            list.push(
-                <Picker.Item key={i} label={i.toString()} value={i} />
-            )
-        }
-        return list
-    }, [])
 
     // 确认时间的回调函数
     const handleConfirm = () => {
-        const timeHMS = `${hour}-${minute}-${second}`
-        onTimeSelect(timeHMS)
+        const timeHM = `${hour}:${minute}`
+        onTimeSelect(timeHM)
     }
 
     return (
@@ -165,13 +154,6 @@ export const TimePickerHMS = ({onTimeSelect}: TimePickerProps) => {
                 style={styles.picker}
             >
                 {minuteList}
-            </Picker>
-            <Picker
-                selectedValue={second}
-                onValueChange={val => setSecond(val)}
-                style={styles.picker}
-            >
-                {secondList}
             </Picker>
             <TouchableOpacity
                 onPress={handleConfirm}

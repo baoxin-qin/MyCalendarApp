@@ -160,6 +160,24 @@ export interface CreateEventProps {
 }
 
 /**
+ * @interface UpdateEventProps
+ * @description 更新事件的 props 类型定义
+ * @property {string} title - 旧的事件标题
+ * @property {string | null} startTime - 旧的事件开始时间
+ * @property {string | null} endTime - 旧的的事件结束时间
+ * @property {string | null} location - 旧的事件地点
+ * @property {string | null} comment - 旧的事件备注
+ * @callback onVisibleChange - 弹窗显示状态变化的回调函数
+ */
+export interface UpdateEventProps {
+    id: string
+    title: string | null
+    location: string | null
+    comment: string | null
+    onVisibleChange: (visible: boolean) => void
+}
+
+/**
  * @interface QueryEventSearcgBarProps
  * @description 查询事件搜索栏的 props 类型定义
  * @callback onKeywordChange - 搜索关键词变化的回调函数
@@ -181,8 +199,9 @@ export interface MenuListProps {
 
 // ---------- 日程事件数据结构 ---------- //
 /**
- * @interface Event
+ * @interface AgendaEvent
  * @description 日程事件数据结构
+ * @property {string} id - 日程 ID
  * @property {string} title - 日程标题
  * @property {string | null} startTime - 日程开始时间
  * @property {string | null} endTime - 日程结束时间
@@ -190,6 +209,7 @@ export interface MenuListProps {
  * @property {string | null} comment - 日程备注
  * @example
  * {
+ *   id: 'aaa-bbb-ccc-ddd-eee', // 基于 uuid v4 生成
  *   title: '开会',
  *   startTime: '2022-01-01 10:00:00',
  *   endTime: '2022-01-01 11:00:00',
@@ -199,7 +219,8 @@ export interface MenuListProps {
  * 时间采用 ISO 格式字符串 YYYY-MM-DD hh:mm:ss
  * 其他可以没有，但是至少有一个标题
  */
-export interface Event {
+export interface AgendaEvent {
+    id: string
     title: string
     startTime: string | null
     endTime: string | null

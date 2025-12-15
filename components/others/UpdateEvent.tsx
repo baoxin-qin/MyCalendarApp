@@ -1,12 +1,12 @@
 /**
- * @file CreateEvent.tsx
- * @description Modal 组件承载的创建事件页面
+ * @file UpdateEvent.tsx
+ * @description 日程事件编辑组件
  */
-import { AgendaEvent, CreateEventProps } from '@/types/Properties';
-import { addEvent, getUUID } from '@/utils';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Entypo from '@expo/vector-icons/Entypo';
-import React, { useState } from 'react';
+import { AgendaEvent, UpdateEventProps } from "@/types/Properties";
+import { addEvent } from "@/utils";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import { useState } from "react";
 import {
     Alert,
     ScrollView,
@@ -15,80 +15,57 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
-} from 'react-native';
-import { TimePickerHM, TimePickerYMD } from './TimePicker';
+    View,
+} from "react-native";
+import { TimePickerHM, TimePickerYMD } from "./TimePicker";
 
-export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
-    // 状态定义
-    const [title, setTitle] = useState('') // 标题
-    const [startTimeYMD, setStartTimeYMD] = useState('') // 开始时间，年月日
-    const [startTimeHM, setStartTimeHM] = useState('') // 开始时间，时分秒
-    const [endTimeYMD, setEndTimeYMD] = useState('') // 结束时间，年月日
-    const [endTimeHM, setEndTimeHM] = useState('') // 结束时间，时分秒
-    const [location, setLocation] = useState('') // 地点
-    const [comment, setComment] = useState('') // 备注
+export const UpdateEvent = ({
+    id,
+    title, 
+    location, 
+    comment, 
+    onVisibleChange
+}: UpdateEventProps) => {
+    const [newTitle, setNewTitle] = useState(title);
+    const [newStartTimeYMD, setNewStartTimeYMD] = useState('');
+    const [newStartTimeHMS, setNewStartTimeHMS] = useState('');
+    const [newEndTimeYMD, setNewEndTimeYMD] = useState('');
+    const [newEndTimeHMS, setNewEndTimeHMS] = useState('');
+    const [newLocation, setNewLocation] = useState(location);
+    const [newComment, setNewComment] = useState(comment);
 
-    // 时间有效性检查
-    const parseTimeYMD = (time: string) => {
-        const [t1, t2, t3] = time.split('-')
-        return [parseInt(t1), parseInt(t2), parseInt(t3)]
-    }
-    const parseTimeHM = (time: string) => {
-        const [t1, t2] = time.split(':')
-        return [parseInt(t1), parseInt(t2)]
-    }
-    const isValidTime = (): boolean => {
-        if (!startTimeYMD || !startTimeHM || !endTimeYMD || !endTimeHM) {
-            return false
-        }
-
-        const [sY, sM, sD] = parseTimeYMD(startTimeYMD)
-        const [sh, sm] = parseTimeHM(startTimeHM)
-        const [eY, eM, eD] = parseTimeYMD(endTimeYMD)
-        const [eh, em] = parseTimeHM(endTimeHM)
-
-        const start = new Date(sY, sM-1, sD, sh, sm)
-        const end = new Date(eY, eM-1, eD, eh, em)
-
-        // 结束时间至少大于等于开始时间
-        return end >= start
-    }
-    // 取消按钮点击事件
     const handleCancel = () => {
-        onVisibleChange(false)
-        Alert.alert('提示', '创建事件已取消')
+        onVisibleChange(false);
+        Alert.alert('提示', '编辑事件已取消')
     }
-    // 确认并保存按钮点击事件
     const handleSave = async () => {
-        if (isValidTime()) {
-            const event: AgendaEvent = {
-                id: '',
-                title: title,
-                startTime: startTimeYMD + ' ' + startTimeHM,
-                endTime: endTimeYMD + ' ' + endTimeHM,
-                location: location,
-                comment: comment,
-            }
-            event.id = await getUUID()
-            await addEvent(event)
-            onVisibleChange(false)
-            Alert.alert('提示', '创建事件成功')
-        } else {
-            Alert.alert('提示', '无效的时间段')
+        const newEvent: AgendaEvent = {
+            id: id,
+            title: newTitle === null ? '默认事件' : newTitle,
+            startTime: newStartTimeYMD + ' ' + newStartTimeHMS,
+            endTime: newEndTimeYMD + ' ' + newEndTimeHMS,
+            location: newLocation,
+            comment: newComment
         }
+        const result = await addEvent(newEvent)
+        if (result) {
+            Alert.alert('提示', '修改事件成功')
+        } else {
+            Alert.alert('提示', '修改事件失败')
+        }
+        onVisibleChange(false);
     }
 
     return (
-        <View style={styles.container} >
-            {/* 顶部按钮区 */}
+        <View style={styles.container}>
+            {/* 顶部栏目 */}
             <View style={{flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center', width: '100%'}}>
                 <TouchableOpacity
                     onPress={handleCancel}
                 >
                     <Text style={{color: 'red', fontSize: 16}}>取消</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 20, fontWeight: 'bold'}}>新建待办</Text>
+                <Text style={{fontSize: 20, fontWeight: 'bold'}}>日程编辑</Text>
                 <TouchableOpacity
                     onPress={handleSave}
                 >
@@ -100,15 +77,15 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
             <ScrollView
                 horizontal={false}
                 showsVerticalScrollIndicator={false}
-                style={styles.area}
+                style={{width: '100%'}}
             >
                 {/* 标题输入框 */}
                 <View style={styles.textInput}>
                     <AntDesign name='profile' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>标题:</Text>
                     <TextInput
-                        value={title}
-                        onChangeText={setTitle}
+                        value={newTitle !== null ? newTitle : '默认事件'}
+                        onChangeText={setNewTitle}
                         placeholder='请输入标题'
                         style={styles.inputFrame}
                     />
@@ -120,8 +97,8 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                         开始时间: (选择后请分别点击确认按钮)
                     </Text>
                     <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setStartTimeYMD} />
-                        <TimePickerHM onTimeSelect={setStartTimeHM} />
+                        <TimePickerYMD onTimeSelect={setNewStartTimeYMD} />
+                        <TimePickerHM onTimeSelect={setNewStartTimeHMS} />
                     </View>
                 </View>
                 <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center', marginVertical: 5}}>
@@ -129,8 +106,8 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                         结束时间: (选择后请分别点击确认按钮)
                     </Text>
                     <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setEndTimeYMD} />
-                        <TimePickerHM onTimeSelect={setEndTimeHM} />
+                        <TimePickerYMD onTimeSelect={setNewEndTimeYMD} />
+                        <TimePickerHM onTimeSelect={setNewEndTimeHMS} />
                     </View>
                 </View>
 
@@ -139,8 +116,8 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                     <Entypo name='location' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>地点:</Text>
                     <TextInput
-                        value={location}
-                        onChangeText={setLocation}
+                        value={newLocation !== null ? newLocation : ''}
+                        onChangeText={setNewLocation}
                         placeholder='请输入地点'
                         style={styles.inputFrame}
                     />
@@ -151,13 +128,13 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                     <AntDesign name='comment' size={18} color={'#000'} />
                     <Text style={styles.textTitle}>备注:</Text>
                     <TextInput
-                        value={comment}
-                        onChangeText={setComment}
+                        value={newComment !== null ? newComment : ''}
+                        onChangeText={setNewComment}
                         placeholder='可以输入一些备注'
                         style={styles.inputFrame}
                     />
                 </View>
-
+                
                 <Text style={{height: 40,fontSize: 14, color: 'darkgray', textAlign: 'center', marginVertical: 5}}>
                     {'我可是有底线的 ^ω^'}
                 </Text>
@@ -168,14 +145,12 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
         paddingTop: StatusBar.currentHeight,
-    },
-    area: {
-        width: '100%',
+        backgroundColor: '#FFF',
     },
     textInput: {
         flexDirection: 'row',
