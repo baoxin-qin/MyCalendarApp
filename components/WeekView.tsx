@@ -3,6 +3,7 @@
  * @description 周视图组件
  */
 import { WeekViewEntryProps, WeekViewMenuProps, WeekViewProps } from '@/types/Properties';
+import { queryOneEventByDate } from '@/utils';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -37,13 +38,13 @@ const Menu = ({thisWeek, onWeekChange}: WeekViewMenuProps) => {
     return (
         <View style={styles.menu}>
             <TouchableOpacity onPress={handlePrevWeek}>
-                <Text style={{color: 'lightgreen', fontSize: 22}}>{'⋀'}</Text>
+                <Text style={{color: '#000', fontSize: 22}}>{'⋀'}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 18,}}>
                 {monday.getMonth() + 1}月{monday.getDate()}日 -- {sunday.getMonth() + 1}月{sunday.getDate()}日
             </Text>
             <TouchableOpacity onPress={handleNextWeek}>
-                <Text style={{color: 'lightgreen', fontSize: 22}}>{'⋁'}</Text>
+                <Text style={{color: '#000', fontSize: 22}}>{'⋁'}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -77,6 +78,9 @@ const Entry = ({name, date, title}: WeekViewEntryProps) => {
  */
 export const WeekView = ({thisWeek, onWeekChange}: WeekViewProps) => {
     const [weekDays, setWeekDays] = useState<Date[]>([])
+    const [eventTitles, setEventTitles] = useState<string[]>([])  // 本周，查询到的每天第一个日程的标题
+    
+    // 这个 useEffect 是根据传入的 thisWeek 计算出本周的日期列表
     useEffect(() => {
         const day = thisWeek.getDay() || 7 // 星期天转换为7
         const monday = new Date(thisWeek)
@@ -90,6 +94,33 @@ export const WeekView = ({thisWeek, onWeekChange}: WeekViewProps) => {
         }
         setWeekDays(days)
     }, [thisWeek])
+
+    // 这个 useEffect 是根据计算的 weekDays 数组，查询本周的每天第一个日程的标题
+    useEffect(() => {
+        // 适配数据库时间格式 YYYY-MM-DD，但要注意补零格式化
+        const formatDate = (date: Date) => {
+            const year = date.getFullYear().toString()
+            const month = (date.getMonth() + 1).toString().padStart(2, '0')
+            const day = date.getDate().toString().padStart(2, '0')
+            return `${year}-${month}-${day}`
+        }
+
+        const fetchEventTitles = async () => {
+            if (weekDays.length === 0) return
+
+            // 当周的日期，格式化
+            const dateString = weekDays.map(day => formatDate(day))
+            // 查询
+            const titleList = await Promise.all(
+                dateString.map(async startTimeYMD => {
+                    const event = await queryOneEventByDate(startTimeYMD)
+                    return event ? event.title : '今天没有日程，好好休息吧 ^_^'
+                })
+            )
+            setEventTitles(titleList)
+        }
+        fetchEventTitles()
+    }, [weekDays])
 
     const weekNames = ['Ⅶ', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ']
 
@@ -106,7 +137,7 @@ export const WeekView = ({thisWeek, onWeekChange}: WeekViewProps) => {
                     key={index}
                     name={weekNames[day.getDay()]}
                     date={day.getDate()}
-                    title={'待定'}
+                    title={eventTitles[index]}
                 />
             ))}
         </View>

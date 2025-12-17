@@ -91,7 +91,20 @@ export const deleteEvent = async (id: string) => {
     }
 }
 
-// 单查询
+// 查询默认 (查询 5 条即可)
+export const queryDefault = async (): Promise<AgendaEvent[] | null> => {
+    const db = await initDB()
+    try {
+        const rows: AgendaEvent[] | null = await db.getAllAsync(
+            `SELECT * FROM Agenda LIMIT 5;`
+        )
+        return rows
+    } catch (error) {
+        return null
+    }
+}
+
+// 单查询 (按标题关键字查)
 export const queryOneEvent = async (keyword: string): Promise<AgendaEvent | null> => {
     const db = await initDB()
     try {
@@ -105,7 +118,7 @@ export const queryOneEvent = async (keyword: string): Promise<AgendaEvent | null
     }
 }
 
-// 批查询
+// 批查询 (按标题关键字查)
 export const queryManyEvents = async (keyword: string): Promise<AgendaEvent[] | null> => {
     const db = await initDB()
     try {
@@ -114,6 +127,48 @@ export const queryManyEvents = async (keyword: string): Promise<AgendaEvent[] | 
             `%${keyword}%`
         )
         return rows
+    } catch (error) {
+        return null
+    }
+}
+
+// 按日期 YYYY-MM-DD 查询
+// 单查询，适配周视图
+export const queryOneEventByDate = async (time: string): Promise<AgendaEvent | null> => {
+    const db = await initDB()
+    try {
+        const firstRow: AgendaEvent | null = await db.getFirstAsync(
+            `SELECT * FROM Agenda WHERE startTime LIKE ?;`,
+            `${time}%`, // 这个 time 实际上是 YYYY-MM-DD 的格式，不考虑后面的时分，进行模糊查询
+        )
+        return firstRow
+    } catch (error) {
+        return null
+    }
+}
+// 多查询
+export const queryManyEventsByDate = async (time: string): Promise<AgendaEvent[] | null> => {
+    const db = await initDB()
+    try {
+        const rows: AgendaEvent[] | null = await db.getAllAsync(
+            `SELECT * FROM Agenda WHERE startTime LIKE ?;`,
+            `${time}%`, 
+        )
+        return rows
+    } catch (error) {
+        return null
+    }
+}
+
+// 适配日视图的查询 (单查询)
+export const queryOneEventByHour = async (time: string): Promise<AgendaEvent | null> => {
+    const db = await initDB()
+    try {
+        const firstRow: AgendaEvent | null = await db.getFirstAsync(
+            `SELECT * FROM Agenda WHERE startTime LIKE ?;`,
+            `${time}%`, // 这个 time 实际上是 YYYY-MM-DD hh 的格式，不考虑最后的分，进行模糊查询
+        )
+        return firstRow
     } catch (error) {
         return null
     }

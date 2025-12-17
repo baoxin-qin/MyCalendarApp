@@ -112,7 +112,7 @@ export default function Homepage() {
                 onPress={handleShowCreateModal}
                 style={styles.createBtn}
             >
-                <Feather name='file-plus' size={24} color={'#FFF'} style={{alignSelf: 'center'}} />
+                <Feather name='file-plus' size={24} color={'#000'} style={{alignSelf: 'center'}} />
             </TouchableOpacity>
             {/* 创建待办 Modal 组件 */}
             <Modal
@@ -153,8 +153,10 @@ const styles = StyleSheet.create({
         right: 15,
         width: 50,
         height: 50,
+        borderWidth: 1,
         borderRadius: 25,
-        backgroundColor: 'lightgreen',
+        borderColor: '#000',
+        backgroundColor: '#FFF',
         justifyContent: 'center',
     },
     resetBtn: {

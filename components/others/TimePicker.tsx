@@ -61,7 +61,8 @@ export const TimePickerYMD = ({onTimeSelect}: TimePickerProps) => {
 
     // 确认日期的回调函数
     const handleConfirm = () => {
-        const timeYMD = `${year}-${month}-${day}`
+        // 必须要格式化为 YYYY-MM-DD，否则会严重影响数据库查询的模糊匹配行为
+        const timeYMD = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
         onTimeSelect(timeYMD)
     }
 
@@ -135,7 +136,8 @@ export const TimePickerHM = ({onTimeSelect}: TimePickerProps) => {
 
     // 确认时间的回调函数
     const handleConfirm = () => {
-        const timeHM = `${hour}:${minute}`
+        // 必须要格式化为 hh:mm，否则会严重影响数据库查询的模糊匹配行为
+        const timeHM = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
         onTimeSelect(timeHM)
     }
 

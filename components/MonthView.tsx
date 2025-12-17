@@ -28,13 +28,13 @@ const Menu = ({thisMonth, onMonthChange}: MonthViewMenuProps) => {
     return (
         <View style={styles.menu}>
             <TouchableOpacity onPress={handlePrevMonth}>
-                <Text style={{color: 'lightgreen', fontSize: 24}}>{"<<"}</Text>
+                <Text style={{color: '#000', fontSize: 24}}>{"<<"}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 24,}}>
                 {thisMonth.getFullYear()}年{thisMonth.getMonth() + 1}月
             </Text>
             <TouchableOpacity onPress={handleNextMonth}>
-                <Text style={{color: 'lightgreen', fontSize: 24}}>{">>"}</Text>
+                <Text style={{color: '#000', fontSize: 24}}>{">>"}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -73,7 +73,7 @@ const Cell = ({date, month, year}: MonthViewCellProps) => {
             style={[styles.cell,]}
         >
             <Text
-                style={[{fontSize: 15, textAlign: 'center',}, isToday && {color: 'darkgreen', fontWeight: 'bold'}]}
+                style={[{fontSize: 15, textAlign: 'center',}, isToday && {fontSize: 20,color: 'lightblue', fontWeight: 'bold'}]}
             >
                 {date}
             </Text>

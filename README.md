@@ -1,44 +1,37 @@
-# A useful calendar app
+# 「 迹 · 录 」
 
-## Profile
+生活的每一刻，都值得记录
 
-It's a simple but generally useful calendar app.
+## 📆 Overview
 
-With it, you can:
+Hey there, still be driven mad by messy agendas? No handy and simple app found?
 
-1. Have a overlook for the calendar
-2. Check your daily routine or agenda item in monthly, weekly and also daily view
-3. To-Do-List edition supported, too
+This "**Meet Day**" calendar app might be the solution for you. Simple but useful tools supported for you.
 
-Tech I use:
+1. 📖 Month / Week / Day view page, which could remind you of your daily routine;
+2. 📄 Agneda files could be shared with other apps by ics format; (e.g. Outlook)
 
-> Here I strongly recommend you to use **Expo** for RN development.
+## 🛠️  Technology  I use
 
-- React Native + Expo
-- Typescript
+- React + React Native(Expo)
+- TypeScript
 
-## How to use
+💡 I strongly recommend you to use **Expo** for React Native development.
 
-### Clone the item
+🔗 More info, go to official website: [Expo Official Website](https://expo.dev)
 
-This repo is open for public. You can fork, clone or even join with me for further app upgrade and evolution.
+## 🚀 Get Started
 
-### Package Installing
-
-use the bash (or any other) in the item root directory
+### Dependency / Package Install
 
 ```bash
 npm install
 ```
 
-### Run your App
-
-just do these:
+### Run the app
 
 ```bash
 npx expo start
 ```
 
-> Warning: you may need to install expo-cli if you never use it before.
-
-For more infomation on **EXPO**, go to official: [Expo Official Website](https://expo.dev)
+❗ If you are new to Expo, you may need to install ``expo-cli`` at first.

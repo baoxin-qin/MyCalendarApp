@@ -39,10 +39,6 @@ export default function Introduction() {
                         <FontAwesome name='apple' size={24} color={'lightblue'} />
                         <Text style={{marginLeft: 1, fontSize: 18}}>iOS</Text>
                     </View>
-                    <View style={[styles.rowALign, {flex:1}]}>
-                        <FontAwesome name='laptop' size={24} color={'#000'} />
-                        <Text style={{marginLeft: 1, fontSize: 18}}>Web</Text>
-                    </View>
                 </View>
             </View>
 

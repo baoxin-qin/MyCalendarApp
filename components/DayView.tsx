@@ -3,7 +3,8 @@
  * @description 日视图组件
  */  
 import { DayEntryProps, DayViewMenuProps, DayViewProps } from '@/types/Properties';
-import React from 'react';
+import { queryOneEventByHour } from '@/utils';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /**
@@ -26,7 +27,7 @@ const Menu = ({thisDay, onDayChange}: DayViewMenuProps) => {
             <TouchableOpacity
                 onPress={handlePrevDay}
             >
-                <Text style={{fontSize: 24, color: 'lightgreen'}}>{'<'}</Text>
+                <Text style={{fontSize: 24, color: '#000'}}>{'<'}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 20}}>
                 {thisDay.getMonth() + 1}月{thisDay.getDate()}日
@@ -34,7 +35,7 @@ const Menu = ({thisDay, onDayChange}: DayViewMenuProps) => {
             <TouchableOpacity
                 onPress={handleNextDay}
             >
-                <Text style={{fontSize: 24, color: 'lightgreen'}}>{'>'}</Text>
+                <Text style={{fontSize: 24, color: '#000'}}>{'>'}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -70,10 +71,37 @@ const Entry = ({time, title}: DayEntryProps) => {
  * 日视图组件
  */
 export const DayView = ({thisDay, onDayChange}: DayViewProps) => {
-    const list = []
+    const [eventTitles, setEventTitles] = useState<string[]>([])
+
+    const list:number[] = []
     for (let i = 0; i <= 23; i++) {
         list.push(i)
     }
+
+    useEffect(() => {
+        const formatTime = (date: Date, hour: number) => {
+            const year = date.getFullYear().toString()
+            const month = (date.getMonth() + 1).toString().padStart(2, '0')
+            const day = date.getDate().toString().padStart(2, '0')
+            const hourStr = hour.toString().padStart(2, '0')
+            return `${year}-${month}-${day} ${hourStr}`
+        }
+
+        const fetchEventTitles = async () => {
+            if (list.length === 0) return
+
+            const titleList = await Promise.all(
+                list.map(async hour => {
+                    const event = await queryOneEventByHour(formatTime(thisDay, hour))
+                    return event ? event.title : '--'
+                })
+            )
+            setEventTitles(titleList)
+        }
+
+        fetchEventTitles()
+    }, [thisDay, list])
+
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -82,7 +110,7 @@ export const DayView = ({thisDay, onDayChange}: DayViewProps) => {
             <View style={styles.container}>
                 <Menu thisDay={thisDay} onDayChange={onDayChange} />
                 {list.map((time, index) => (
-                    <Entry key={index} time={time} title='未知事件' />
+                    <Entry key={index} time={time} title={eventTitles[index]} />
                 ))}
                 <Text style={{height: 40,color: 'darkgray', fontSize: 14, textAlign: 'center', marginVertical: 10}}>
                     {'我可是有底线的 >_<'}
