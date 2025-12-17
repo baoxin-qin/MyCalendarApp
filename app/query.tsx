@@ -72,7 +72,14 @@ const EventEntry = ({id, title, startTime, endTime, location, comment, onEdit, o
     }
 
     const handleEditEvent = () => {
-        onEdit({id, title, startTime, endTime, location, comment})
+        onEdit({
+            id:id, 
+            title:title, 
+            startTime:startTime, 
+            endTime: endTime, 
+            location: location, 
+            comment: comment
+        })
     }
 
     return (
@@ -114,7 +121,7 @@ const EventEntry = ({id, title, startTime, endTime, location, comment, onEdit, o
  */
 export default function QueryEvent() {
     const [title, setTitle] = useState('');
-    const [events, setEvents] = useState<AgendaEvent[]>([]);
+    const [events, setEvents] = useState<AgendaEvent[]>([]); // 日程列表，适配批量查询的状态
     const [selectedEvent, setSelectedEvent] = useState<AgendaEvent | null>(null);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -155,7 +162,7 @@ export default function QueryEvent() {
         }, 300);
         setDebounceTimer(timer);
         return () => clearTimeout(timer);
-    }, [title])
+    }, [title]) // 依赖项为 title，表示用户输入后 300ms防抖，即可触发查询
 
     return (
         <View style={styles.container}>
@@ -195,6 +202,11 @@ export default function QueryEvent() {
                 <UpdateEvent
                     {...selectedEvent!}
                     onVisibleChange={setShowUpdateModal}
+                    onUpdateSuccess={async () => {
+                        // 修改日程事件后，触发搜索页面的刷新
+                        const rows = await queryManyEvents(title)
+                        setEvents(rows || [])
+                    }}
                 />
             </Modal>
         </View>

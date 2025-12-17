@@ -3,7 +3,7 @@
  * @description 日程事件编辑组件
  */
 import { AgendaEvent, UpdateEventProps } from "@/types/Properties";
-import { addEvent } from "@/utils";
+import { updateEvent } from "@/utils";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useState } from "react";
@@ -24,7 +24,8 @@ export const UpdateEvent = ({
     title, 
     location, 
     comment, 
-    onVisibleChange
+    onVisibleChange,
+    onUpdateSuccess
 }: UpdateEventProps) => {
     const [newTitle, setNewTitle] = useState(title);
     const [newStartTimeYMD, setNewStartTimeYMD] = useState('');
@@ -47,9 +48,10 @@ export const UpdateEvent = ({
             location: newLocation,
             comment: newComment
         }
-        const result = await addEvent(newEvent)
+        const result = await updateEvent(newEvent);
         if (result) {
             Alert.alert('提示', '修改事件成功')
+            onUpdateSuccess()
         } else {
             Alert.alert('提示', '修改事件失败')
         }

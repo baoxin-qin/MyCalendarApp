@@ -168,6 +168,7 @@ export interface CreateEventProps {
  * @property {string | null} location - 旧的事件地点
  * @property {string | null} comment - 旧的事件备注
  * @callback onVisibleChange - 弹窗显示状态变化的回调函数
+ * @callback onUpdateSuccess - 如果修改成功，则通知父组件刷新日程事件列表
  */
 export interface UpdateEventProps {
     id: string
@@ -175,6 +176,7 @@ export interface UpdateEventProps {
     location: string | null
     comment: string | null
     onVisibleChange: (visible: boolean) => void
+    onUpdateSuccess: () => void
 }
 
 /**
