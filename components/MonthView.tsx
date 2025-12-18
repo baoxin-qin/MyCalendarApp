@@ -2,20 +2,21 @@
  * @file MonthView.tsx
  * @description 月视图组件
  */
+import { getConstellation, getLunarYearName } from "@/instance";
 import {
     MonthViewCellProps,
     MonthViewMenuProps,
     MonthViewProps,
     MonthViewTableProps,
 } from "@/types/Properties";
-import React from "react";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 /**
  * 月历菜单栏目
  */
 const Menu = ({thisMonth, onMonthChange}: MonthViewMenuProps) => {
-
     const handlePrevMonth = () => {
         const prevMonth = new Date(thisMonth.getFullYear(), thisMonth.getMonth() - 1, 1)
         onMonthChange(prevMonth)
@@ -24,18 +25,26 @@ const Menu = ({thisMonth, onMonthChange}: MonthViewMenuProps) => {
         const nextMonth = new Date(thisMonth.getFullYear(), thisMonth.getMonth() + 1, 1)
         onMonthChange(nextMonth)
     }
+    const lunarYearName = useMemo(() => {
+        return getLunarYearName(thisMonth.getFullYear())
+    }, [thisMonth])
 
     return (
-        <View style={styles.menu}>
-            <TouchableOpacity onPress={handlePrevMonth}>
-                <Text style={{color: '#000', fontSize: 24}}>{"<<"}</Text>
-            </TouchableOpacity>
-            <Text style={{fontSize: 24,}}>
-                {thisMonth.getFullYear()}年{thisMonth.getMonth() + 1}月
+        <View style={{width: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+            <View style={styles.menu}>
+                <TouchableOpacity onPress={handlePrevMonth}>
+                    <Text style={{color: '#000', fontSize: 24}}>{"<<"}</Text>
+                </TouchableOpacity>
+                <Text style={{fontSize: 24,}}>
+                    {thisMonth.getFullYear()}年{thisMonth.getMonth() + 1}月
+                </Text>
+                <TouchableOpacity onPress={handleNextMonth}>
+                    <Text style={{color: '#000', fontSize: 24}}>{">>"}</Text>
+                </TouchableOpacity>
+            </View>
+            <Text style={{textAlign: 'center', color: '#B0B0B0'}}>
+                {lunarYearName}
             </Text>
-            <TouchableOpacity onPress={handleNextMonth}>
-                <Text style={{color: '#000', fontSize: 24}}>{">>"}</Text>
-            </TouchableOpacity>
         </View>
     )
 }
@@ -67,7 +76,9 @@ const Cell = ({date, month, year}: MonthViewCellProps) => {
     const isToday = obj.getDate() === date &&
                     obj.getMonth() + 1 === month &&
                     obj.getFullYear() === year
-    
+    const constellation = getConstellation(month, date!== null? date : 1)
+    const symbol = `zodiac-${constellation.nameEN}`
+
     return (
         <TouchableOpacity
             style={[styles.cell,]}
@@ -77,6 +88,12 @@ const Cell = ({date, month, year}: MonthViewCellProps) => {
             >
                 {date}
             </Text>
+            {isToday && 
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginHorizontal: 2}}>
+                    <MaterialCommunityIcons name={symbol as 'symbol'} size={10} color={'lightblue'} />
+                    <Text style={{color: '#C0C0C0', fontSize: 10}}>{constellation.nameCN}</Text>
+                </View>
+            }
         </TouchableOpacity>
     )
 }
