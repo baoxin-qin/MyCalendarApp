@@ -27,7 +27,7 @@ const Menu = ({thisDay, onDayChange}: DayViewMenuProps) => {
             <TouchableOpacity
                 onPress={handlePrevDay}
             >
-                <Text style={{fontSize: 24, color: '#000'}}>{'<'}</Text>
+                <Text style={{fontSize: 24, color: '#000'}}>{'<<'}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 20}}>
                 {thisDay.getMonth() + 1}月{thisDay.getDate()}日
@@ -35,7 +35,7 @@ const Menu = ({thisDay, onDayChange}: DayViewMenuProps) => {
             <TouchableOpacity
                 onPress={handleNextDay}
             >
-                <Text style={{fontSize: 24, color: '#000'}}>{'>'}</Text>
+                <Text style={{fontSize: 24, color: '#000'}}>{'>>'}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -93,7 +93,7 @@ export const DayView = ({thisDay, onDayChange}: DayViewProps) => {
             const titleList = await Promise.all(
                 list.map(async hour => {
                     const event = await queryOneEventByHour(formatTime(thisDay, hour))
-                    return event ? event.title : '--'
+                    return event ? event.title : '- - - - -'
                 })
             )
             setEventTitles(titleList)

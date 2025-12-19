@@ -12,6 +12,7 @@ import {
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Expansion } from "./others/Expansion";
 
 /**
  * 月历菜单栏目
@@ -154,6 +155,7 @@ export const MonthView = ({thisMonth, onMonthChange}: MonthViewProps) => {
             <Menu thisMonth={thisMonth} onMonthChange={onMonthChange} />
             <Header />
             <Table thisMonth={thisMonth} />
+            <Expansion />
         </View>
     )
 }

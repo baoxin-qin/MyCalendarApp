@@ -38,13 +38,13 @@ const Menu = ({thisWeek, onWeekChange}: WeekViewMenuProps) => {
     return (
         <View style={styles.menu}>
             <TouchableOpacity onPress={handlePrevWeek}>
-                <Text style={{color: '#000', fontSize: 22}}>{'⋀'}</Text>
+                <Text style={{color: '#000', fontSize: 22}}>{'<<'}</Text>
             </TouchableOpacity>
             <Text style={{fontSize: 18,}}>
                 {monday.getMonth() + 1}月{monday.getDate()}日 -- {sunday.getMonth() + 1}月{sunday.getDate()}日
             </Text>
             <TouchableOpacity onPress={handleNextWeek}>
-                <Text style={{color: '#000', fontSize: 22}}>{'⋁'}</Text>
+                <Text style={{color: '#000', fontSize: 22}}>{'>>'}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -67,7 +67,7 @@ const Entry = ({name, date, title}: WeekViewEntryProps) => {
                     justifyContent: 'center',
                 }}
             >
-                <Text style={{textAlign: 'left', paddingLeft: 5,}}>{title || '暂无内容'}</Text>
+                <Text style={{textAlign: 'left', paddingLeft: 5,}}>{title || ' '}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -114,7 +114,7 @@ export const WeekView = ({thisWeek, onWeekChange}: WeekViewProps) => {
             const titleList = await Promise.all(
                 dateString.map(async startTimeYMD => {
                     const event = await queryOneEventByDate(startTimeYMD)
-                    return event ? event.title : '今天没有日程，好好休息吧 ^_^'
+                    return event ? event.title : '- - - - -'
                 })
             )
             setEventTitles(titleList)
