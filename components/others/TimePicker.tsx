@@ -7,12 +7,13 @@ import { Picker } from "@react-native-picker/picker";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-// 年月日的时间选择器
-export const TimePickerYMD = ({onTimeSelect}: TimePickerProps) => {
+export const TimePicker = ({onTimeSelect}: TimePickerProps) => {
     const now = new Date(); // 选择器默认选择当前时间
     const [year, setYear] = useState(now.getFullYear());
     const [month, setMonth] = useState(now.getMonth()+1);
     const [day, setDay] = useState(now.getDate());
+    const [hour, setHour] = useState(now.getHours());
+    const [minute, setMinute] = useState(now.getMinutes());
 
     // 计算当月最大天数 (适配不同月份的天数)
     const getMaxMonthDays = (year: number, month: number) => {
@@ -58,61 +59,6 @@ export const TimePickerYMD = ({onTimeSelect}: TimePickerProps) => {
         }
         return list;
     }, [year, month])
-
-    // 确认日期的回调函数
-    const handleConfirm = () => {
-        // 必须要格式化为 YYYY-MM-DD，否则会严重影响数据库查询的模糊匹配行为
-        const timeYMD = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
-        onTimeSelect(timeYMD)
-    }
-
-    return (
-        <View style={styles.column}>
-            <Picker
-                selectedValue={year}
-                onValueChange={val => setYear(val)}
-                style={styles.picker}
-            >
-                {yearList}
-            </Picker>
-            <Picker
-                selectedValue={month}
-                onValueChange={val => setMonth(val)}
-                style={styles.picker}
-            >
-                {monthList}
-            </Picker>
-            <Picker
-                selectedValue={day}
-                onValueChange={val => setDay(val)}
-                style={styles.picker}
-            >
-                {dayList}
-            </Picker>
-            <TouchableOpacity
-                onPress={handleConfirm}
-                style={{
-                    width: 100,
-                    height: 40,
-                    backgroundColor: 'lightgreen',
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                }}
-            >
-                <Text style={{color: '#FFFFFF', textAlign: 'center',}}>
-                    确认
-                </Text>
-            </TouchableOpacity>
-        </View>
-    )
-}
-
-// 时分的时间选择器
-export const TimePickerHM = ({onTimeSelect}: TimePickerProps) => {
-    const now = new Date(); // 选择器默认选择当前时间
-    const [hour, setHour] = useState(now.getHours());
-    const [minute, setMinute] = useState(now.getMinutes());
-
     // 时钟选择，0-23时
     const hourList = useMemo(() => {
         const list = []
@@ -134,40 +80,68 @@ export const TimePickerHM = ({onTimeSelect}: TimePickerProps) => {
         return list
     }, [])
 
-    // 确认时间的回调函数
+    // 确认日期和时间的回调函数
     const handleConfirm = () => {
-        // 必须要格式化为 hh:mm，否则会严重影响数据库查询的模糊匹配行为
-        const timeHM = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-        onTimeSelect(timeHM)
+        // 必须要格式化为 YYYY-MM-DD hh:mm，否则会严重影响数据库查询的模糊匹配行为
+        const monthStr = month.toString().padStart(2, '0')
+        const dayStr = day.toString().padStart(2, '0')
+        const hourStr = hour.toString().padStart(2, '0')
+        const minuteStr = minute.toString().padStart(2, '0')
+        const formatTime = `${year}-${monthStr}-${dayStr} ${hourStr}:${minuteStr}`
+        onTimeSelect(formatTime)
     }
 
     return (
-        <View style={styles.column}>
-            <Picker
-                selectedValue={hour}
-                onValueChange={val => setHour(val)}
-                style={styles.picker}
-            >
-                {hourList}
-            </Picker>
-            <Picker
-                selectedValue={minute}
-                onValueChange={val => setMinute(val)}
-                style={styles.picker}
-            >
-                {minuteList}
-            </Picker>
+        <View style={styles.columnAlign}>
+            {/* 日期选择器 */}
+            <View style={styles.rowAlign}>
+                <Picker
+                    selectedValue={year}
+                    onValueChange={val => setYear(val)}
+                    style={styles.picker}
+                >
+                    {yearList}
+                </Picker>
+                <Picker
+                    selectedValue={month}
+                    onValueChange={val => setMonth(val)}
+                    style={styles.picker}
+                >
+                    {monthList}
+                </Picker>
+                <Picker
+                    selectedValue={day}
+                    onValueChange={val => setDay(val)}
+                    style={styles.picker}
+                >
+                    {dayList}
+                </Picker>
+            </View>
+
+            {/* 时间选择器 */}
+            <View style={styles.rowAlign}>
+                <Picker
+                    selectedValue={hour}
+                    onValueChange={val => setHour(val)}
+                    style={styles.picker}
+                >
+                    {hourList}
+                </Picker>
+                <Picker
+                    selectedValue={minute}
+                    onValueChange={val => setMinute(val)}
+                    style={styles.picker}
+                >
+                    {minuteList}
+                </Picker>
+            </View>
+
+            {/* 确认按钮 */}
             <TouchableOpacity
                 onPress={handleConfirm}
-                style={{
-                    width: 100,
-                    height: 40,
-                    backgroundColor: 'lightgreen',
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                }}
+                style={styles.confirmButton}
             >
-                <Text style={{color: '#FFFFFF', textAlign: 'center',}}>
+                <Text style={{color: '#FFF', textAlign: 'center'}}>
                     确认
                 </Text>
             </TouchableOpacity>
@@ -181,8 +155,25 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center',
     },
+    columnAlign: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    rowAlign: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+    },
     picker: {
         width: 120,
         height: 60,
+    },
+    confirmButton: {
+        width: 100,
+        height: 40,
+        backgroundColor: 'lightgreen',
+        borderRadius: 20,
+        justifyContent: 'center',
     }
 })

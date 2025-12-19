@@ -17,17 +17,15 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { TimePickerHM, TimePickerYMD } from './TimePicker';
+import { TimePicker } from './TimePicker';
 
 export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
     // 状态定义
     const [title, setTitle] = useState('') // 标题
-    const [startTimeYMD, setStartTimeYMD] = useState('') // 开始时间，年月日
-    const [startTimeHM, setStartTimeHM] = useState('') // 开始时间，时分秒
-    const [endTimeYMD, setEndTimeYMD] = useState('') // 结束时间，年月日
-    const [endTimeHM, setEndTimeHM] = useState('') // 结束时间，时分秒
     const [location, setLocation] = useState('') // 地点
     const [comment, setComment] = useState('') // 备注
+    const [startTime, setStartTime] = useState('') // 开始时间，年月日 时分秒
+    const [endTime, setEndTime] = useState('') // 结束时间，年月日 时分秒
 
     // 时间有效性检查
     const parseTimeYMD = (time: string) => {
@@ -39,14 +37,17 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
         return [parseInt(t1), parseInt(t2)]
     }
     const isValidTime = (): boolean => {
-        if (!startTimeYMD || !startTimeHM || !endTimeYMD || !endTimeHM) {
+        if (!startTime || !endTime) {
             return false
         }
 
-        const [sY, sM, sD] = parseTimeYMD(startTimeYMD)
-        const [sh, sm] = parseTimeHM(startTimeHM)
-        const [eY, eM, eD] = parseTimeYMD(endTimeYMD)
-        const [eh, em] = parseTimeHM(endTimeHM)
+        const [sYMD, sHM] = startTime.split(' ')
+        const [eYMD, eHM] = endTime.split(' ')
+
+        const [sY, sM, sD] = parseTimeYMD(sYMD)
+        const [sh, sm] = parseTimeHM(sHM)
+        const [eY, eM, eD] = parseTimeYMD(eYMD)
+        const [eh, em] = parseTimeHM(eHM)
 
         const start = new Date(sY, sM-1, sD, sh, sm)
         const end = new Date(eY, eM-1, eD, eh, em)
@@ -65,8 +66,8 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
             const event: AgendaEvent = {
                 id: '',
                 title: title,
-                startTime: startTimeYMD + ' ' + startTimeHM,
-                endTime: endTimeYMD + ' ' + endTimeHM,
+                startTime: startTime,
+                endTime: endTime,
                 location: location,
                 comment: comment,
             }
@@ -119,19 +120,13 @@ export const CreateEvent = ({onVisibleChange}: CreateEventProps) => {
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10}}>
                         开始时间: (选择后请分别点击确认按钮)
                     </Text>
-                    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setStartTimeYMD} />
-                        <TimePickerHM onTimeSelect={setStartTimeHM} />
-                    </View>
+                    <TimePicker onTimeSelect={setStartTime} />
                 </View>
                 <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center', marginVertical: 5}}>
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10} }>
                         结束时间: (选择后请分别点击确认按钮)
                     </Text>
-                    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setEndTimeYMD} />
-                        <TimePickerHM onTimeSelect={setEndTimeHM} />
-                    </View>
+                    <TimePicker onTimeSelect={setEndTime} />
                 </View>
 
                 {/* 地点输入框 */}

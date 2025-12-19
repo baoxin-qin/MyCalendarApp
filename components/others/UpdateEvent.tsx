@@ -17,7 +17,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { TimePickerHM, TimePickerYMD } from "./TimePicker";
+import { TimePicker } from "./TimePicker";
 
 export const UpdateEvent = ({
     id,
@@ -28,34 +28,64 @@ export const UpdateEvent = ({
     onUpdateSuccess
 }: UpdateEventProps) => {
     const [newTitle, setNewTitle] = useState(title);
-    const [newStartTimeYMD, setNewStartTimeYMD] = useState('');
-    const [newStartTimeHMS, setNewStartTimeHMS] = useState('');
-    const [newEndTimeYMD, setNewEndTimeYMD] = useState('');
-    const [newEndTimeHMS, setNewEndTimeHMS] = useState('');
     const [newLocation, setNewLocation] = useState(location);
     const [newComment, setNewComment] = useState(comment);
+    const [newStartTime, setNewStartTime] = useState('');
+    const [newEndTime, setNewEndTime] = useState('');
+
+    // 时间有效性检查
+    const parseTimeYMD = (time: string) => {
+        const [t1, t2, t3] = time.split('-')
+        return [parseInt(t1), parseInt(t2), parseInt(t3)]
+    }
+    const parseTimeHM = (time: string) => {
+        const [t1, t2] = time.split(':')
+        return [parseInt(t1), parseInt(t2)]
+    }
+    const isValidTime = (): boolean => {
+        if (!newStartTime || !newEndTime) {
+            return false
+        }
+        const [sYMD, sHM] = newStartTime.split(' ')
+        const [eYMD, eHM] = newEndTime.split(' ')
+
+        const [sY, sM, sD] = parseTimeYMD(sYMD)
+        const [sh, sm] = parseTimeHM(sHM)
+        const [eY, eM, eD] = parseTimeYMD(eYMD)
+        const [eh, em] = parseTimeHM(eHM)
+
+        const start = new Date(sY, sM-1, sD, sh, sm)
+        const end = new Date(eY, eM-1, eD, eh, em)
+
+        // 结束时间至少大于等于开始时间
+        return end >= start
+    }
 
     const handleCancel = () => {
         onVisibleChange(false);
         Alert.alert('提示', '编辑事件已取消')
     }
     const handleSave = async () => {
-        const newEvent: AgendaEvent = {
-            id: id,
-            title: newTitle === null ? '默认事件' : newTitle,
-            startTime: newStartTimeYMD + ' ' + newStartTimeHMS,
-            endTime: newEndTimeYMD + ' ' + newEndTimeHMS,
-            location: newLocation,
-            comment: newComment
-        }
-        const result = await updateEvent(newEvent);
-        if (result) {
-            Alert.alert('提示', '修改事件成功')
-            onUpdateSuccess()
+        if (isValidTime()) {
+            const newEvent: AgendaEvent = {
+                id: id,
+                title: newTitle === null ? '默认事件' : newTitle,
+                startTime: newStartTime,
+                endTime: newEndTime,
+                location: newLocation,
+                comment: newComment
+            }
+            const result = await updateEvent(newEvent);
+            if (result) {
+                Alert.alert('提示', '修改事件成功')
+                onUpdateSuccess()
+            } else {
+                Alert.alert('提示', '修改事件失败')
+            }
+            onVisibleChange(false);
         } else {
-            Alert.alert('提示', '修改事件失败')
+            Alert.alert('提示', '无效的时间选择')
         }
-        onVisibleChange(false);
     }
 
     return (
@@ -98,19 +128,13 @@ export const UpdateEvent = ({
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10}}>
                         开始时间: (选择后请分别点击确认按钮)
                     </Text>
-                    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setNewStartTimeYMD} />
-                        <TimePickerHM onTimeSelect={setNewStartTimeHMS} />
-                    </View>
+                    <TimePicker onTimeSelect={setNewStartTime} />
                 </View>
                 <View style={{flexDirection: 'column', width: '100%', alignSelf: 'center', marginVertical: 5}}>
                     <Text style={{alignSelf: 'flex-start', paddingHorizontal: 10} }>
                         结束时间: (选择后请分别点击确认按钮)
                     </Text>
-                    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-evenly'}}>
-                        <TimePickerYMD onTimeSelect={setNewEndTimeYMD} />
-                        <TimePickerHM onTimeSelect={setNewEndTimeHMS} />
-                    </View>
+                    <TimePicker onTimeSelect={setNewEndTime} />
                 </View>
 
                 {/* 地点输入框 */}
